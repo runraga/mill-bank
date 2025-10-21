@@ -59,16 +59,22 @@ $images = all_images($itemPath);
 <main class="item-layout">
   <section class="gallery">
     <?php if ($images): ?>
-      <?php foreach ($images as $img):
-        $imgUrl = $webItemsPath . '/' . rawurlencode($slug) . '/' . rawurlencode(basename($img));
-      ?>
-        <a href="<?php echo htmlspecialchars($imgUrl); ?>" target="_blank" rel="noopener">
-          <img src="<?php echo htmlspecialchars($imgUrl); ?>" alt="<?php echo htmlspecialchars($title); ?>" loading="lazy">
-        </a>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <div class="placeholder large">No images</div>
-    <?php endif; ?>
+  <?php foreach ($images as $i => $img):
+    $imgUrl = $webItemsPath . '/' . rawurlencode($slug) . '/' . rawurlencode(basename($img));
+  ?>
+    <button type="button"
+            class="thumb"
+            data-index="<?php echo $i; ?>"
+            data-src="<?php echo htmlspecialchars($imgUrl); ?>"
+            aria-label="Open image <?php echo $i + 1; ?>">
+      <img src="<?php echo htmlspecialchars($imgUrl); ?>"
+           alt="<?php echo htmlspecialchars($title); ?>"
+           loading="lazy">
+    </button>
+  <?php endforeach; ?>
+<?php else: ?>
+  <div class="placeholder large">No images</div>
+<?php endif; ?>
   </section>
 
   <section class="description">
@@ -84,7 +90,82 @@ $images = all_images($itemPath);
     </div>
   </section>
 </main>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox hidden" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="lb-backdrop" data-close="1"></div>
 
+  <div class="lb-content" role="document">
+    <button class="lb-close" aria-label="Close (Esc)" data-close="1">&times;</button>
+
+    <button class="lb-nav lb-prev" aria-label="Previous image">&#10094;</button>
+
+    <img id="lb-image" alt="Expanded item image">
+
+    <button class="lb-nav lb-next" aria-label="Next image">&#10095;</button>
+
+    <div class="lb-counter" aria-live="polite" aria-atomic="true"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const thumbs = Array.from(document.querySelectorAll('.gallery .thumb'));
+  if (!thumbs.length) return;
+
+  const lb = document.getElementById('lightbox');
+  const imgEl = document.getElementById('lb-image');
+  const btnPrev = lb.querySelector('.lb-prev');
+  const btnNext = lb.querySelector('.lb-next');
+  const btnClose = lb.querySelector('.lb-close');
+  const counter = lb.querySelector('.lb-counter');
+  const backdrop = lb.querySelector('.lb-backdrop');
+
+  const sources = thumbs.map(b => b.dataset.src);
+  let idx = 0;
+  let lastFocus = null;
+
+  function show(i){
+    idx = (i + sources.length) % sources.length;
+    imgEl.src = sources[idx];
+    counter.textContent = (sources.length > 1)
+      ? ( (idx+1) + ' / ' + sources.length )
+      : '';
+  }
+
+  function open(i){
+    lastFocus = document.activeElement;
+    show(i);
+    lb.classList.remove('hidden');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    btnClose.focus();
+    document.addEventListener('keydown', onKey);
+  }
+
+  function close(){
+    lb.classList.add('hidden');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+    document.removeEventListener('keydown', onKey);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  function onKey(e){
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') show(idx+1);
+    else if (e.key === 'ArrowLeft') show(idx-1);
+  }
+
+  thumbs.forEach(b=>{
+    b.addEventListener('click', ()=> open(Number(b.dataset.index)||0));
+  });
+
+  btnNext.addEventListener('click', ()=> show(idx+1));
+  btnPrev.addEventListener('click', ()=> show(idx-1));
+  btnClose.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+})();
+</script>
 <footer class="site-footer">
   <small><a href="index.php">All items</a></small>
 </footer>
