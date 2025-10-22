@@ -46,6 +46,7 @@ $images = all_images($itemPath);
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?php echo htmlspecialchars($title); ?> – Free Stuff</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="icon" type="image/png" href="../favicon.png">
 </head>
 <body>
 <header class="site-header">
