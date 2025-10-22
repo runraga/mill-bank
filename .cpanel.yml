@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - /bin/echo "=== Deploy start: $(date) ===" >> /home/runraga/deploy.log
+    - /bin/echo "=== Deploy start day: $(date) ===" >> /home/runraga/deploy.log
     - export DEPLOYPATH=/home/runraga/public_html/mill-bank/ REPOPATH=$PWD
     - /bin/mkdir -p "$DEPLOYPATH"
     - /usr/bin/rsync -av --delete --exclude '.git' --exclude 'deploy.log' --exclude '.deployed.txt' --exclude '.well-known/' "$REPOPATH/" "$DEPLOYPATH/" 2>> /home/runraga/deploy.log || /bin/rsync -av --delete --exclude '.git' --exclude 'deploy.log' --exclude '.deployed.txt' --exclude '.well-known/' "$REPOPATH/" "$DEPLOYPATH/" 2>> /home/runraga/deploy.log || ( /bin/find "$DEPLOYPATH" -mindepth 1 -maxdepth 1 -not -name '.well-known' -exec /bin/rm -rf {} + ; /bin/cp -a "$REPOPATH/." "$DEPLOYPATH/" )
