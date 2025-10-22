@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/USER/public_html/mill-bank/
+    - /bin/rsync -a --delete --exclude '.git' --exclude '.well-known' $PWD/ $DEPLOYPATH/
