@@ -87,7 +87,7 @@ $images = all_images($itemPath);
       <p>No description provided.</p>
     <?php endif; ?>
     <div class="cta">
-      <p><strong>Interested?</strong> Reply to my WhatsApp message with the item title.</p>
+      <p><strong>Interested?</strong> DM me on WhatsApp.</p>
     </div>
   </section>
 </main>

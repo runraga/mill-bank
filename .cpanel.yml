@@ -4,7 +4,7 @@ deployment:
     - set -e
     # Paths
     - export DEPLOYPATH=/home/runraga/public_html/mill-bank/
-    - export REPOPATH=$PWD
+    - export REPOPATH=$PWD/mill-bank
 
     # Log start
     - /bin/echo "=== Deploy start: $(date) ===" >> /home/runraga/deploy.log
