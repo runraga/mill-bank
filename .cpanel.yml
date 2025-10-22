@@ -1,23 +1,10 @@
 ---
 deployment:
   tasks:
-    # 1) Set your live directory (make sure this matches your real docroot)
     - export DEPLOYPATH=/home/runraga/public_html/mill-bank/
-
-    # 2) Start a log so we can debug
-    - /bin/echo "=== Deploy start date: $(date) ===" >> /home/runraga/deploy.log
-    - /usr/bin/whoami >> /home/runraga/deploy.log
-    - /bin/pwd >> /home/runraga/deploy.log
-    - /bin/ls -al >> /home/runraga/deploy.log
-
-    # 3) Ensure the target exists
+    - /bin/echo "=== Deploy start: $(date) ===" >> /home/runraga/deploy.log
     - /bin/mkdir -p "$DEPLOYPATH"
-
-    # 4) Copy files from the repo working tree ($PWD) to your live folder
-    #    If your site lives in a subfolder (e.g. 'site/'), change $PWD/ to $PWD/site/
     - /usr/bin/rsync -av --delete \
-      --exclude '.git' \
-      "$PWD/" "$DEPLOYPATH/" | /usr/bin/tee -a /home/runraga/deploy.log
-
-    # 5) Done
+        --exclude '.git' \
+        "$PWD/" "$DEPLOYPATH/" | /usr/bin/tee -a /home/runraga/deploy.log
     - /bin/echo "=== Deploy end: $(date) ===" >> /home/runraga/deploy.log
