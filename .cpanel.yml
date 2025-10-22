@@ -1,10 +1,20 @@
 ---
 deployment:
   tasks:
+    # 1️⃣ Set your live site folder
     - export DEPLOYPATH=/home/runraga/public_html/mill-bank/
+
+    # 2️⃣ Log start (optional but handy)
     - /bin/echo "=== Deploy start: $(date) ===" >> /home/runraga/deploy.log
+
+    # 3️⃣ Make sure the target folder exists
     - /bin/mkdir -p "$DEPLOYPATH"
+
+    # 4️⃣ Copy everything from repo working tree to live folder
     - /usr/bin/rsync -av --delete \
-        --exclude '.git' \
-        "$PWD/" "$DEPLOYPATH/" | /usr/bin/tee -a /home/runraga/deploy.log
+      --exclude '.git' \
+      --exclude 'deploy.log' \
+      "$PWD/" "$DEPLOYPATH/" | /usr/bin/tee -a /home/runraga/deploy.log
+
+    # 5️⃣ Log end
     - /bin/echo "=== Deploy end: $(date) ===" >> /home/runraga/deploy.log
