@@ -1,6 +1,43 @@
 ---
 deployment:
   tasks:
-    - /bin/echo "Ran at $(date)" >> /home/runraga/deploy-hook.txt
-    - /bin/mkdir -p /home/runraga/public_html/mill-bank/
-    - /bin/echo "Hello from deploy $(date)" > /home/runraga/public_html/mill-bank/_deployed.txt
+    - set -e
+    # Paths
+    - export DEPLOYPATH=/home/runraga/public_html/mill-bank/
+    - export REPOPATH=$PWD
+
+    # Log start
+    - /bin/echo "=== Deploy start: $(date) ===" >> /home/runraga/deploy.log
+
+    # Ensure target exists
+    - /bin/mkdir -p "$DEPLOYPATH"
+
+    # Commit metadata for traceability
+    - export SHA=$(/usr/bin/git -C "$REPOPATH" rev-parse --short HEAD || /bin/true)
+    - export AUTHOR=$(/usr/bin/git -C "$REPOPATH" log -1 --pretty=format:%an || /bin/true)
+    - export DATE=$(/usr/bin/git -C "$REPOPATH" log -1 --pretty=format:%cI || /bin/true)
+
+    # Preferred: rsync (preserve .well-known, remove anything else that was deleted in repo)
+    - |
+      if /usr/bin/test -x /usr/bin/rsync; then
+        /usr/bin/rsync -av --delete \
+          --exclude '.git' \
+          --exclude 'deploy.log' \
+          --exclude '.deployed.txt' \
+          --exclude '.well-known/' \
+          "$REPOPATH/" "$DEPLOYPATH/" | /usr/bin/tee -a /home/runraga/deploy.log
+      else
+        # Fallback: cp -a (manual clean but keep .well-known)
+        /bin/find "$DEPLOYPATH" -mindepth 1 -maxdepth 1 \
+          -not -name '.well-known' \
+          -exec /bin/rm -rf {} +
+        /bin/cp -a "$REPOPATH/." "$DEPLOYPATH/"
+      fi
+
+    # Write a marker file to the live site
+    - /bin/echo "Deployed SHA: $SHA" > "$DEPLOYPATH/.deployed.txt"
+    - /bin/echo "Author: $AUTHOR" >> "$DEPLOYPATH/.deployed.txt"
+    - /bin/echo "Date: $DATE"   >> "$DEPLOYPATH/.deployed.txt"
+
+    # Log end
+    - /bin/echo "=== Deploy end: $(date) ===" >> /home/runraga/deploy.log
