@@ -5,7 +5,7 @@ deployment:
     - export DEPLOYPATH=/home/runraga/public_html/mill-bank/
 
     # 2) Start a log so we can debug
-    - /bin/echo "=== Deploy start: $(date) ===" >> /home/runraga/deploy.log
+    - /bin/echo "=== Deploy start date: $(date) ===" >> /home/runraga/deploy.log
     - /usr/bin/whoami >> /home/runraga/deploy.log
     - /bin/pwd >> /home/runraga/deploy.log
     - /bin/ls -al >> /home/runraga/deploy.log
