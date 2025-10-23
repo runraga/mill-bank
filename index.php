@@ -48,7 +48,11 @@ function status_for($itemPath) {
 <body>
 <header class="site-header">
   <h1>Items for rehoming</h1>
-  <p>All items are free but please consider a small donation to the Mill Bank fund or the Community Centre fund. Details on how to make a donation available on request.</p>
+  <p>All items are free but please consider a small donation to the Mill Bank fund or the Community Centre fund.</p>
+  <p>Details on how to make a donation available on request.</p>
+  <h2>Collection</h2>
+  <p>We're home 3.30pm onwards on weekdays for collection and Saturday 25th between midday and 4pm and Sunday 26th after 2pm.</p>
+  <p>
 </header>
 
 <main class="grid">
