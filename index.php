@@ -79,7 +79,10 @@ function status_for($itemPath) {
 </main>
 
 <footer class="site-footer">
-  <small>Last updated: <?php echo htmlspecialchars(date('Y-m-d H:i')); ?></small>
+  <?php
+  date_default_timezone_set('Europe/London');
+  ?>
+  <small>Last updated: <?php echo htmlspecialchars(date('Y-m-d H:i')); ?> (UK time)</small>
 </footer>
 </body>
 </html>
