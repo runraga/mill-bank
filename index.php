@@ -51,7 +51,7 @@ function status_for($itemPath) {
   <p>All items are free but please consider a small donation to the Mill Bank fund or the Community Centre fund.</p>
   <p>Details on how to make a donation available on request.</p>
   <h2>Collection</h2>
-  <p>We'll be home 3.30pm onwards on weekdays and Saturday 8th and Sunday 9th between midday and 4pm.</p>
+  <p>We'll be home 3.30pm onwards on weekdays, Saturday 8th 5pm - 7pm and Sunday 9th between midday and 4pm.</p>
   <p>
 </header>
 
